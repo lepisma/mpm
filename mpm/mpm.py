@@ -2,9 +2,11 @@
 Main mpm module
 """
 
-import yaml
-from pathlib import Path
+from .handlers import get_handler
 from clint.textui import colored, puts
+from clint.textui.core import STDERR
+from pathlib import Path
+import yaml
 
 
 class Sources:
@@ -15,7 +17,7 @@ class Sources:
     def __init__(self, sources_path):
 
         self.sources_path = sources_path
-        self.sources_dict = self._read_sources()
+        self._read_sources()
 
     def _read_sources(self):
         """
@@ -25,7 +27,8 @@ class Sources:
 
         if not self.sources_path.is_file():
             puts(colored.yellow("Sources file not found, creating..."))
-            self.sources_path.touch()
+            self.sources_dict = {}
+            self._commit_sources()
 
         with self.sources_path.open() as fi:
             self.sources_dict = yaml.load(fi)
@@ -35,14 +38,21 @@ class Sources:
         Return list of all source items
         """
 
-        print(self.sources_dict)
+        for handler, items in self.sources_dict.items():
+            for item in items:
+                puts(colored.blue(handler) + " :: " + item)
 
-    def add(self, handler, uri):
+    def add(self, handler_name, url):
         """
         Add given source item to file
         """
 
-        pass
+        # Add handler key if not present
+        if handler_name not in self.sources_dict:
+            self.sources_dict[handler_name] = []
+
+        self.sources_dict[handler_name].append(url)
+        self._commit_sources()
 
     def _commit_sources(self):
         """
@@ -115,3 +125,20 @@ class Store:
         """
 
         pass
+
+    def add(self, handler_name, url):
+        """
+        """
+
+        # Check if handler is implemented
+        try:
+            get_handler(handler_name)
+        except NotImplementedError:
+            puts(
+                colored.red("Handler not implemented. Aborting."),
+                stream=STDERR)
+
+        self.sources.add(handler_name, url)
+
+    def list(self):
+        self.sources.list()
