@@ -14,9 +14,18 @@ setup(
     author="Abhinav Tushar",
     author_email="abhinav.tushar.vs@gmail.com",
     url=project_url,
-    install_requires=[],
+    install_requires=[
+        "Click",
+        "mediafile",
+        "youtube_dl"
+    ],
     keywords="",
     packages=find_packages(),
+    entry_points={
+        "console_scripts": [
+            "mpm=mpm.command:cli"
+        ]
+    },
     classifiers=(
         "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
         "Natural Language :: English",
