@@ -1,52 +1,42 @@
-import click
+"""
+Music package manager (mpm)
+
+Usage:
+  mpm add youtube <url>
+  mpm ls | list
+  mpm rm | remove
+  mpm up | update
+  mpm dl | download
+  mpm import [--clean]
+
+  mpm -h | --help
+  mpm -v | --version
+
+Arguments:
+  add           Add source.
+  ls, list       List available sources.
+  rm, remove     Remove a source.
+  up, update     Update items in db.
+  dl, download   Download files.
+  import        Import to beets.
+
+Options:
+  -h, --help     Show this screen.
+  -v, --version  Show version.
+  --clean       Clean after import.
+"""
+
 from pathlib import Path
 from mpm import Store
+from docopt import docopt
 
 # Start working from current directory
 store = Store(Path.cwd())
 
 
-@click.group()
 def cli():
     """
-    Music package manager (mpm)
+    Main entry point for cli
     """
-    pass
 
-
-@cli.command("add", help="Add a source")
-@click.argument("handler", nargs=1)
-@click.argument("url", nargs=1)
-def add(handler, url):
-    pass
-
-
-@cli.command("list", help="List currently used sources")
-def list():
-    pass
-
-
-@cli.command("remove", help="Remove source")
-def remove():
-    pass
-
-
-@cli.command("update", help="Update db from sources")
-def update():
-    pass
-
-
-@cli.command("download", help="Download files")
-def download():
-    pass
-
-
-@cli.command("import", help="Import to beets, use --clean to remove files")
-@click.option("--clean", is_flag=True)
-def beet_import(clean):
-    pass
-
-
-@cli.command("clean", help="Remove files not in db")
-def clean():
-    pass
+    arguments = docopt(__doc__, version="mpm v0.1.0")

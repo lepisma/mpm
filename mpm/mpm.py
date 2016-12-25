@@ -4,7 +4,7 @@ Main mpm module
 
 import yaml
 from pathlib import Path
-from click import secho
+from clint.textui import colored, puts
 
 
 class Sources:
@@ -24,7 +24,7 @@ class Sources:
         """
 
         if not self.sources_path.is_file():
-            secho("Sources file not found, creating...", bold=True, fg="red")
+            puts(colored.yellow("Sources file not found, creating..."))
             self.sources_path.touch()
 
         with self.sources_path.open() as fi:
@@ -72,7 +72,7 @@ class DB:
         """
 
         if not self.db_path.is_file():
-            secho("DB not found, creating...", bold=True, fg="red")
+            puts(colored.yellow("DB not found, creating..."))
             self.db_path.touch()
 
     def prune(self, imported=False):

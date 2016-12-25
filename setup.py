@@ -15,7 +15,8 @@ setup(
     author_email="abhinav.tushar.vs@gmail.com",
     url=project_url,
     install_requires=[
-        "Click",
+        "docopt",
+        "clint",
         "mediafile",
         "youtube_dl",
         "pyyaml",
