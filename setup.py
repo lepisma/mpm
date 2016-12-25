@@ -17,7 +17,9 @@ setup(
     install_requires=[
         "Click",
         "mediafile",
-        "youtube_dl"
+        "youtube_dl",
+        "pyyaml",
+        "tinydb"
     ],
     keywords="",
     packages=find_packages(),
