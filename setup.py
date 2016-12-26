@@ -18,7 +18,6 @@ setup(
         "docopt",
         "tqdm",
         "colorama",
-        "mediafile",
         "youtube_dl",
         "pyyaml"
     ],
