@@ -16,8 +16,8 @@ def _download_process(yid):
     """
 
     cmd = [
-        "youtube-dl", "-x", "-w", "-q", "--no-warnings", "--audio-format",
-        "mp3", "--audio-quality", "0", "--prefer-ffmpeg"
+        "youtube-dl", "-x", "-w", "-q", "--no-warnings", "--ignore-errors",
+        "--audio-format", "mp3", "--audio-quality", "0", "--prefer-ffmpeg"
     ]
     cmd.append("https://www.youtube.com/watch?v=" + yid)
     run(cmd)
