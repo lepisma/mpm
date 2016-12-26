@@ -32,6 +32,17 @@ def convert_audio(queue):
         Path(file_name).unlink()
 
 
+class DownloadLogger:
+    def debug(self, msg):
+        pass
+
+    def warning(self, msg):
+        pass
+
+    def error(self, msg):
+        pass
+
+
 class Mpm:
     """
     Main store for mpm data
@@ -133,7 +144,8 @@ class Mpm:
             "format": "bestaudio/best",
             "external_downloader": downloader,
             "external_downloader_args": downloader_opts,
-            "progress_hooks": [_hook]
+            "progress_hooks": [_hook],
+            "logger": DownloadLogger()
         }
 
         with youtube_dl.YoutubeDL(ydl_opts) as ydl:
