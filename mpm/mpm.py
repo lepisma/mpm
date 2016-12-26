@@ -2,195 +2,175 @@
 Main mpm module
 """
 
-from .downloader import download
-from .handlers import get_handler
+from .resolvers import get_resolver
 from colorama import init, Fore
 from pathlib import Path
+from subprocess import run
+from multiprocessing import JoinableQueue, Pool
+from tqdm import tqdm
+import sys
 import yaml
+import youtube_dl
 
 init(autoreset=True)
 
 
-class Sources:
+def convert_audio(queue):
     """
-    Sources file wrapper
-    """
-
-    def __init__(self, sources_path):
-
-        self.sources_path = sources_path
-        self._read_sources()
-
-    def _read_sources(self):
-        """
-        Return sources dictionary
-        Create file if none found
-        """
-
-        if not self.sources_path.is_file():
-            print(Fore.YELLOW + "Sources file not found, creating...")
-            self.sources_dict = {}
-            self._commit_sources()
-
-        with self.sources_path.open() as fi:
-            self.sources_dict = yaml.load(fi)
-
-    def add(self, handler_name, source_name, url):
-        """
-        Add given source item to file
-        """
-
-        # Add handler key if not present
-        if handler_name not in self.sources_dict:
-            self.sources_dict[handler_name] = []
-
-        if url in [item["url"] for item in self.sources_dict[handler_name]]:
-            print(Fore.RED + "Url already present. Skipping.")
-        elif source_name in [
-                item["name"] for item in self.sources_dict[handler_name]
-        ]:
-            print(Fore.RED + "Source already present. Skipping.")
-        else:
-            self.sources_dict[handler_name].append({
-                "name": source_name,
-                "url": url
-            })
-            self._commit_sources()
-
-    def _commit_sources(self):
-        """
-        Write to file
-        """
-
-        with self.sources_path.open("w") as fo:
-            yaml.dump(self.sources_dict, fo)
-
-
-class DB:
-    """
-    DB wrapper
+    Convert audio to mp3 using ffmpeg
     """
 
-    def __init__(self, db_path):
-        """
-        """
-
-        self.db_path = Path(db_path)
-        self._read_db()
-
-    def _read_db(self):
-        """
-        Read db
-        Create if none found
-        """
-
-        if not self.db_path.is_file():
-            print(Fore.YELLOW + "DB not found, creating...")
-            self.items = []
-            self._commit_db()
-
-        with self.db_path.open() as fi:
-            self.items = yaml.load(fi)
-
-    def insert(self, item):
-        """
-        Insert item in db
-        """
-
-        self.items.append(item)
-
-    def save(self):
-        self._commit_db()
-
-    def indb(self, handler, source_name, yid):
-        """
-        Check if given item is in db
-        """
-
-        return [handler, source_name, yid] in [
-            [item["handler"], item["source"], item["yid"]]
-            for item in self.items
+    while True:
+        file_name = queue.get()
+        output_name = str(Path(file_name).with_suffix(".mp3"))
+        cmd = [
+            "ffmpeg", "-i", file_name, "-b:a", "192k", "-nostats", "-loglevel",
+            "0", output_name
         ]
-
-    def mark_dup(self):
-        """
-        Mark duplicates across all items to avoid download
-        """
-
-        uniques = []
-
-        for idx, item in enumerate(self.items):
-            if item["yid"] in uniques:
-                item["download"] = False
-            else:
-                uniques.append(item["yid"])
-
-        self._commit_db()
-
-        print("Duplicates youtube ids marked : " + str(
-            len(self.items) - len(uniques)))
-
-    def _commit_db(self):
-        """
-        Write to file
-        """
-
-        with self.db_path.open("w") as fo:
-            yaml.dump(self.items, fo)
+        run(cmd)
+        queue.task_done()
+        Path(file_name).unlink()
 
 
-class Store:
+class Mpm:
     """
-    Store for mpm data
+    Main store for mpm data
     """
 
     def __init__(self, directory):
 
         self.directory = Path(directory)
-        self.sources = Sources(self.directory.joinpath("mpm.yaml"))
-        self.db = DB(self.directory.joinpath("mpm-lock.yaml"))
+        self.sources_path = self.directory.joinpath("mpm.yaml")
+        self.links_path = self.directory.joinpath("mpm.links")
+        self.archive_path = self.directory.joinpath("mpm.lock")
+
+        self.converted_processes = []
+
+        self._read_sources()
+        self._read_links()
+
+    def _read_links(self):
+        """
+        Read links list
+        """
+
+        if not self.links_path.is_file():
+            print(Fore.YELLOW + "Links file not found, creating...")
+            self.links_path.touch()
+
+        with self.links_path.open() as fi:
+            self.links = fi.readlines()
+
+    def _write_links(self):
+        """
+        Write links to file
+        """
+
+        with self.links_path.open("w") as fo:
+            fo.write("\n".join(self.links))
+
+    def _read_sources(self):
+        """
+        Read source dictionary
+        Create file if none found
+        """
+
+        if not self.sources_path.is_file():
+            print(Fore.YELLOW + "Sources file not found, creating...")
+            self.sources = {}
+            self._write_sources()
+
+        with self.sources_path.open() as fi:
+            self.sources = yaml.load(fi)
+
+    def _write_sources(self):
+        """
+        Write source dictioanry to file
+        """
+
+        with self.sources_path.open("w") as fo:
+            yaml.dump(self.sources, fo)
 
     def update(self):
         """
         Update lock file using sources
         """
 
-        for handler, sources in self.sources.sources_dict.items():
+        for resolver, sources in self.sources.items():
             for source in sources:
-                print(Fore.BLUE + "Updating " + source["name"] + " (" + handler
-                      + ")")
-                hfun = get_handler(handler)
-                hfun(source["name"], source["url"], self.db)
-                self.db.save()
+                print(Fore.BLUE + "Updating " + source["name"] + " (" +
+                      resolver + ")")
+                self.links += get_resolver(resolver)(source, self.links)
+                self._write_links()
 
     def download(self):
         """
-        Download marked files
+        Download links
         """
 
-        self.db.mark_dup()
-        download(self.db)
-        self.db.save()
+        queue = JoinableQueue()
+        Pool(5, convert_audio, (queue, ))
 
-    def beet_import(self):
-        """
-        Run beet import on unimported files
-        """
+        progress = tqdm(desc="Downloading files")
 
-        pass
+        def _hook(args):
+            """
+            youtube-dl progress hook
+            """
 
-    def add(self, handler_name, source_name, url):
+            if args["status"] == "finished":
+                queue.put(args["filename"])
+                progress.update()
+
+        downloader = "aria2c"
+        downloader_opts = ["-q"]
+
+        ydl_opts = {
+            "quiet": True,
+            "no_warnings": True,
+            "ignoreerrors": True,
+            "download_archive": str(self.archive_path),
+            "format": "bestaudio/best",
+            "external_downloader": downloader,
+            "external_downloader_args": downloader_opts,
+            "progress_hooks": [_hook]
+        }
+
+        with youtube_dl.YoutubeDL(ydl_opts) as ydl:
+            ydl.download(self.links)
+
+        queue.join()
+        progress.close()
+
+    def add(self, resolver_name, source_name, url, inc):
         """
         Add source
         """
 
-        # Check if handler is implemented
+        # Check if resolver is implemented
         try:
-            get_handler(handler_name)
+            get_resolver(resolver_name)
         except NotImplementedError:
-            print(Fore.RED + "Handler not implemented. Aborting.")
+            print(Fore.RED + resolver_name +
+                  " resolver not implemented, aborting.")
+            sys.exit(1)
 
-        self.sources.add(handler_name, source_name, url)
+        if resolver_name not in self.sources:
+            self.sources[resolver_name] = []
+
+        if url in [item["url"] for item in self.sources[resolver_name]]:
+            print(Fore.RED + "Url already present. Skipping.")
+        elif source_name in [
+                item["name"] for item in self.sources[resolver_name]
+        ]:
+            print(Fore.RED + "Source already present. Skipping.")
+        else:
+            self.sources[resolver_name].append({
+                "name": source_name,
+                "url": url,
+                "inc": inc
+            })
+            self._write_sources()
 
     def list(self):
         """
@@ -198,10 +178,12 @@ class Store:
         """
 
         print("Listing sources from ", end="")
-        print(Fore.YELLOW + str(self.sources.sources_path))
+        print(Fore.YELLOW + str(self.sources_path))
 
-        for handler, sources in self.sources.sources_dict.items():
+        for resolver, sources in self.sources.items():
             for source in sources:
                 print("[", end="")
-                print(Fore.BLUE + handler, end="")
+                print(Fore.BLUE + resolver, end="")
+                if source["inc"]:
+                    print(Fore.BLUE + " (inc)", end="")
                 print("] :: " + source["name"] + " :: " + source["url"])
