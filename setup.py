@@ -16,11 +16,11 @@ setup(
     url=project_url,
     install_requires=[
         "docopt",
-        "clint",
+        "tqdm",
+        "colorama",
         "mediafile",
         "youtube_dl",
-        "pyyaml",
-        "tinydb"
+        "pyyaml"
     ],
     keywords="",
     packages=find_packages(),

@@ -2,7 +2,7 @@
 Music package manager (mpm)
 
 Usage:
-  mpm add youtube <url>
+  mpm add youtube <name> <url>
   mpm ls | list
   mpm up | update
   mpm dl | download
@@ -16,7 +16,7 @@ Arguments:
   ls, list       List available sources.
   up, update     Update items in db.
   dl, download   Download files.
-  im, import         Import to beets.
+  im, import     Import to beets.
 
 Options:
   -h, --help     Show this screen.
@@ -41,7 +41,7 @@ def cli():
 
     if arguments["add"]:
         # Assuming youtube by default as of now
-        store.add("youtube", arguments["<url>"])
+        store.add("youtube", arguments["<name>"], arguments["<url>"])
     elif arguments["ls"] or arguments["list"]:
         store.list()
     elif arguments["up"] or arguments["update"]:

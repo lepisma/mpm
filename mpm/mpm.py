@@ -2,11 +2,13 @@
 Main mpm module
 """
 
+from .downloader import download
 from .handlers import get_handler
-from clint.textui import colored, puts
-from clint.textui.core import STDERR
+from colorama import init, Fore
 from pathlib import Path
 import yaml
+
+init(autoreset=True)
 
 
 class Sources:
@@ -26,23 +28,14 @@ class Sources:
         """
 
         if not self.sources_path.is_file():
-            puts(colored.yellow("Sources file not found, creating..."))
+            print(Fore.YELLOW + "Sources file not found, creating...")
             self.sources_dict = {}
             self._commit_sources()
 
         with self.sources_path.open() as fi:
             self.sources_dict = yaml.load(fi)
 
-    def list(self):
-        """
-        Return list of all source items
-        """
-
-        for handler, items in self.sources_dict.items():
-            for item in items:
-                puts(colored.blue(handler) + " :: " + item)
-
-    def add(self, handler_name, url):
+    def add(self, handler_name, source_name, url):
         """
         Add given source item to file
         """
@@ -51,8 +44,18 @@ class Sources:
         if handler_name not in self.sources_dict:
             self.sources_dict[handler_name] = []
 
-        self.sources_dict[handler_name].append(url)
-        self._commit_sources()
+        if url in [item["url"] for item in self.sources_dict[handler_name]]:
+            print(Fore.RED + "Url already present. Skipping.")
+        elif source_name in [
+                item["name"] for item in self.sources_dict[handler_name]
+        ]:
+            print(Fore.RED + "Source already present. Skipping.")
+        else:
+            self.sources_dict[handler_name].append({
+                "name": source_name,
+                "url": url
+            })
+            self._commit_sources()
 
     def _commit_sources(self):
         """
@@ -73,25 +76,67 @@ class DB:
         """
 
         self.db_path = Path(db_path)
-        self.db = self._get_db()
+        self._read_db()
 
-    def _get_db(self):
+    def _read_db(self):
         """
-        Return db
+        Read db
         Create if none found
         """
 
         if not self.db_path.is_file():
-            puts(colored.yellow("DB not found, creating..."))
-            self.db_path.touch()
+            print(Fore.YELLOW + "DB not found, creating...")
+            self.items = []
+            self._commit_db()
 
-    def prune(self, imported=False):
+        with self.db_path.open() as fi:
+            self.items = yaml.load(fi)
+
+    def insert(self, item):
         """
-        Remove files not in
-        Optionally remove imported files and tag for dl
+        Insert item in db
         """
 
-        pass
+        self.items.append(item)
+
+    def save(self):
+        self._commit_db()
+
+    def indb(self, handler, source_name, yid):
+        """
+        Check if given item is in db
+        """
+
+        return [handler, source_name, yid] in [
+            [item["handler"], item["source"], item["yid"]]
+            for item in self.items
+        ]
+
+    def mark_dup(self):
+        """
+        Mark duplicates across all items to avoid download
+        """
+
+        uniques = []
+
+        for idx, item in enumerate(self.items):
+            if item["yid"] in uniques:
+                item["download"] = False
+            else:
+                uniques.append(item["yid"])
+
+        self._commit_db()
+
+        print("Duplicates youtube ids marked : " + str(
+            len(self.items) - len(uniques)))
+
+    def _commit_db(self):
+        """
+        Write to file
+        """
+
+        with self.db_path.open("w") as fo:
+            yaml.dump(self.items, fo)
 
 
 class Store:
@@ -103,21 +148,29 @@ class Store:
 
         self.directory = Path(directory)
         self.sources = Sources(self.directory.joinpath("mpm.yaml"))
-        self.db = DB(self.directory.joinpath("mpm-db.json"))
+        self.db = DB(self.directory.joinpath("mpm-lock.yaml"))
 
     def update(self):
         """
         Update lock file using sources
         """
 
-        pass
+        for handler, sources in self.sources.sources_dict.items():
+            for source in sources:
+                print(Fore.BLUE + "Updating " + source["name"] + " (" + handler
+                      + ")")
+                hfun = get_handler(handler)
+                hfun(source["name"], source["url"], self.db)
+                self.db.save()
 
     def download(self):
         """
         Download marked files
         """
 
-        pass
+        self.db.mark_dup()
+        download(self.db)
+        self.db.save()
 
     def beet_import(self):
         """
@@ -126,19 +179,29 @@ class Store:
 
         pass
 
-    def add(self, handler_name, url):
+    def add(self, handler_name, source_name, url):
         """
+        Add source
         """
 
         # Check if handler is implemented
         try:
             get_handler(handler_name)
         except NotImplementedError:
-            puts(
-                colored.red("Handler not implemented. Aborting."),
-                stream=STDERR)
+            print(Fore.RED + "Handler not implemented. Aborting.")
 
-        self.sources.add(handler_name, url)
+        self.sources.add(handler_name, source_name, url)
 
     def list(self):
-        self.sources.list()
+        """
+        List items in sources list
+        """
+
+        print("Listing sources from ", end="")
+        print(Fore.YELLOW + str(self.sources.sources_path))
+
+        for handler, sources in self.sources.sources_dict.items():
+            for source in sources:
+                print("[", end="")
+                print(Fore.BLUE + handler, end="")
+                print("] :: " + source["name"] + " :: " + source["url"])
