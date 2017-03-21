@@ -16,6 +16,12 @@ class YtCache:
         self.list_lock = Lock()
 
     def _update_list(self, file_path: Path):
+        if len(self.cached) > self.limit:
+            # Kick out the oldest item
+            oldest = min(self.cached, key=lambda item: item[1])
+            self.cache_path.joinpath(oldest[0]).unlink()
+            self.cached.remove(oldest)
+
         self.cached.append([file_path.name, file_path.stat().st_mtime])
 
     def get(self, yt_id: str, stream=True):
