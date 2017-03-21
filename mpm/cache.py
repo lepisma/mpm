@@ -41,6 +41,7 @@ class YtCache:
                 return audio_stream.url_https
             else:
                 # Blocking download
+                self._download(audio_stream, file_path)
                 return file_path
 
     def _download(self, pafy_stream, file_path: Path):
