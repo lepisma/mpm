@@ -25,10 +25,6 @@ class YtCache:
         self.cached.append([file_path.name, file_path.stat().st_mtime])
 
     def get(self, yt_id: str, stream=True):
-        """
-        When file is present, return file link and ignore stream flag
-        """
-
         file_path = self.cache_path.joinpath(yt_id)
 
         if yt_id in [fid[0] for fid in self.cached]:
@@ -45,10 +41,6 @@ class YtCache:
                 return file_path
 
     def _download(self, pafy_stream, file_path: Path):
-        """
-        Download given id
-        """
-
         pafy_stream.download(str(file_path), quiet=True)
 
         # Update the list
