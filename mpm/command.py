@@ -2,24 +2,20 @@
 Music package manager (mpm)
 
 Usage:
-  mpm add <resolver> <name> <url> [--inc]
-  mpm ls | list
-  mpm up | update
-  mpm dl | download
+  mpm source add <resolver> <name> <url> [--inc]
+  mpm source (rm | remove) <name>
+  mpm source (ls | list)
+  mpm source (up | update) [<name>]
+  mpm (ls | list) <query>
+  mpm play <query>
 
   mpm -h | --help
   mpm -v | --version
 
-Arguments:
-  add            Add source.
-  ls, list       List available sources.
-  up, update     Update items in db.
-  dl, download   Download files.
-
 Options:
   -h, --help     Show this screen.
   -v, --version  Show version.
-  --inc          Incremental source.
+  --inc          Incremental source. Handled as special case by resolver.
 """
 
 from .mpm import Mpm
@@ -37,6 +33,8 @@ def cli():
 
     arguments = docopt(__doc__, version="mpm v0.1.0")
 
+    if arguments["source"]
+
     if arguments["add"]:
         mpm.add(arguments["<resolver>"], arguments["<name>"],
                 arguments["<url>"], arguments["--inc"])
@@ -44,5 +42,3 @@ def cli():
         mpm.list()
     elif arguments["up"] or arguments["update"]:
         mpm.update()
-    elif arguments["dl"] or arguments["download"]:
-        mpm.download()

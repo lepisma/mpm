@@ -3,8 +3,7 @@ from setuptools import find_packages, setup
 with open("README.rst") as readme_file:
     readme = readme_file.read()
 
-project_url = "https://github.com/"
-project_url += "lepisma/mpm"
+project_url = "https://github.com/lepisma/mpm"
 
 setup(
     name="mpm",
@@ -18,8 +17,9 @@ setup(
         "docopt",
         "tqdm",
         "colorama",
-        "youtube_dl",
-        "pyyaml"
+        "pyyaml",
+        "pafy",
+        "hy==0.12.1"
     ],
     keywords="",
     packages=find_packages(),

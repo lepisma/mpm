@@ -1,0 +1,16 @@
+#+TITLE: mpm
+
+~mpm~ is a package manager for music. It tries to solve two problems:
+
+1. Limitations of keeping local music files.
+2. Lack of decent exploratory music search on vanilla internet.
+
+It is planned to consists of following components:
++ /Resolvers/ which resolve ~sources~ to real files. This can be local files (via
+  beets) or streaming files, e.g. via a YouTube cache. The end product of
+  resolution is an updated database of songs with pointer to appropriate
+  file/url.
++ A set of /plugins/ which add features, create groups etc. in the database by
+  following the pointers.
++ A /search/ system for creating rule based lists for playback, possibly allowing
+  other players to use the lists.
