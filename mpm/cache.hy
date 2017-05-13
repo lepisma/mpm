@@ -3,6 +3,7 @@
 (import [threading [Lock Thread]])
 (import [glob [glob]])
 (import [os [path unlink]])
+(import [mpm.utils [*]])
 (import pafy)
 
 (defn item-pair [file-path]
@@ -13,7 +14,7 @@
   "Cache for youtube with a kick limit"
 
   (defn --init-- [self cache-path limit]
-    (setv self.cache-path (path.expanduser cache-path))
+    (setv self.cache-path (g-dir cache-path))
     (setv self.limit limit)
     (let [files (glob (path.join self.cache-path "*"))]
       (setv self.cached (list (map item-pair files))))
