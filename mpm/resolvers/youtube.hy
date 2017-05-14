@@ -13,9 +13,9 @@
   "Insert pafy item in the table."
   (let [yid item.videoid
         title item.title
-        item-in-table (table.find_one :yid yid)]
+        item-in-table (table.find_one :pointer yid)]
     (if (none? item-in-table)
-      (table.insert (dict :yid yid
+      (table.insert (dict :pointer yid
                           :title title
                           :sources source-name))
       ;; Append source name so that we can link to this song from this source
