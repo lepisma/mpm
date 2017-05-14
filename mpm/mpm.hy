@@ -28,7 +28,7 @@
     (if (none? (table.find_one :name name))
       (table.insert source)
       (color-print :warn "Source "
-                   :normal name
+                   :bold name
                    :warn " already present in database. Skipping."))))
 
 (defn source-remove [source-name database]
