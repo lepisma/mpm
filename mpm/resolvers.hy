@@ -1,6 +1,6 @@
 ;; Source to url resolvers
 
-(require [mpm.macros [*]])
+(require [mpm.macros [this-or-that]])
 
 (defn youtube [source available]
   "Resolve youtube links. Asks for a SOURCE and list of AVAILABLE items.
