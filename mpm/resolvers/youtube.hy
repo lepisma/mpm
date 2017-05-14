@@ -35,7 +35,7 @@ Return a list of items resolved"
         url (get source "url")
         inc (get source "inc")
         table (get database "songs")]
-    (color-print :bold (+ "Resolving source " url))
+    (color-print :bold (+ "Resolving source " source-name))
     (if (in "watch" url)
       ;; This is a single video (ignoring playlist in the link)
       (try
