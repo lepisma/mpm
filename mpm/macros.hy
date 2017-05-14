@@ -1,4 +1,4 @@
-(import [colorama [Fore]])
+(import [colorama [Fore Style]])
 (import colorama)
 
 (colorama.init :autoreset True)
@@ -7,10 +7,11 @@
   `(lif ~g!x ~g!x ~y))
 
 (defmacro color-print [&rest args]
-  (let [color-map {:warn Fore.YELLOW
-                   :info Fore.BLUE
-                   :error Fore.RED
-                   :normal Fore.WHITE}
+  (let [color-map {:warn (+ Fore.YELLOW Style.BRIGHT)
+                   :info Fore.CYAN
+                   :error (+ Fore.RED Style.BRIGHT)
+                   :normal Fore.WHITE
+                   :bold (+ Fore.WHITE Style.BRIGHT)}
         n (len args)
         i 0]
     (setv out-exp '())

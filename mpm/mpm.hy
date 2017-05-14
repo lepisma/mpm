@@ -71,9 +71,12 @@
   (defn list-source [self]
     "Print all sources available"
     (for [item (source-list self.database)]
-      (color-print :normal (+ (str (get item "id")) " [")
+      (color-print :bold (str (get item "id"))
+                   :normal " ["
                    :info (+ (get item "resolver") (if (get item "inc") " (inc)" ""))
-                   :normal (+ "] " (get item "name") " :: " (get item "url")))))
+                   :normal "] "
+                   :bold (get item "name")
+                   :normal (+ " :: " (get item "url")))))
 
   (defn update-source [self &optional [source-name None]]
     "Update information from sources. Optionally do this only for the
