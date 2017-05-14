@@ -5,12 +5,13 @@
 1. Limitations of keeping local music files.
 2. Lack of decent exploratory music search on vanilla internet.
 
-It is planned to consists of following components:
-+ /Resolvers/ which resolve ~sources~ to real files. This can be local files (via
-  beets) or streaming files, e.g. via a YouTube cache. The end product of
+It is planned to consist of following components:
++ /Resolvers/ which resolve ~sources~ to real files. These can be local files (from
+  beets database) or streaming files, e.g. via youtube. The end product of
   resolution is an updated database of songs with pointer to appropriate
   file/url.
-+ A set of /plugins/ which add features, create groups etc. in the database by
-  following the pointers.
-+ A /search/ system for creating rule based lists for playback, possibly allowing
-  other players to use the lists.
++ A set of /plugins/ which add features, create groups, add custom sources (like
+  hot 100, recommendations based on my last few listens) etc. in the database by
+  working on the the pointers.
++ A /search/ system for creating dynamic, rule based lists (initially based on
+  beets-bbq) for playback, possibly allowing other players to use these lists.
