@@ -31,3 +31,10 @@
             [(string? q) (.append acc `(get ~dict ~q))]
             [(coll? q) (.append acc `(check-args ~dict ~q))]))
     acc))
+
+(defmacro query-list [return-cond from source-list where check-cond is item]
+  "SQL-ish query on list"
+  `(try
+    (let [item-index (.index (list (map (fn [it] ~check-cond) ~source-list)) ~item)]
+      ((fn [it] ~return-cond) (nth ~source-list item-index)))
+    (except [ValueError] False)))
