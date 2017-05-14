@@ -38,3 +38,14 @@
     (let [item-index (.index (list (map (fn [it] ~check-cond) ~source-list)) ~item)]
       ((fn [it] ~return-cond) (nth ~source-list item-index)))
     (except [ValueError] False)))
+
+(defmacro separate [predicate source-list]
+  "Separate items depending on whether they satisfy the predicate.
+First list is of True items, second is of False."
+  `(let [true-items []
+         false-items []]
+     (list
+      (map (fn [x] (if (~predicate x)
+                     (.append true-items x)
+                     (.append false-items x))) ~source-list))
+     [true-items false-items]))

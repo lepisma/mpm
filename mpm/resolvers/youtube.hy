@@ -1,6 +1,6 @@
 (import pafy)
 (import [tqdm [tqdm]])
-(require [mpm.macros [color-print query-list]])
+(require [mpm.macros [color-print query-list separate]])
 
 (defn add-source-tag [item source-name table]
   "Add source name for the item in the table."
@@ -44,15 +44,16 @@ Return a list of items resolved"
       (raise (NotImplementedError))
       ;; This is a playlist
       (let [plist (pafy.get_playlist2 url :basic True)
+            piter (iter plist)
             entries []]
-        (for [pitem (tqdm plist)]
+        (for [_ (tqdm (range (len plist)))]
           (try
-           (do (if (and inc (processed? pitem source-name all-songs)
+           (do (setv pitem (next piter))
+               (if (and inc (processed? pitem source-name all-songs)
                         (do (color-print :warn "Reached end of incremental source")
                             (break))))
                (.append entries pitem))
-           (except [OSError]))))
-        (add-entries-to-table (filter (fn [x] (present? x all-songs)) entries)
-                              source-name table)
-        (add-tags-to-table (filter (fn [x] (present? x all-songs)) entries)
-                           source-name table table-rows))))
+           (except [Exception] (print "sdsd"))))
+        (let [[to-tag to-add] (separate (fn [x] (present? x all-songs)) entries)]
+          (add-tags-to-table to-tag source-name table all-songs)
+          (add-entries-to-table to-add source-name table))))))
