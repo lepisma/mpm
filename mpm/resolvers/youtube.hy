@@ -9,10 +9,10 @@
 
 (defn add-tags-to-table [entries source-name table table-rows]
   "Add self source tag for entries in the table. Assume entries are present."
-  (map (fn [x]
-         (add-source-tag
-          (query-list it from table-rows where (get it "pointer") is x.videoid)
-          source-name table)) entries))
+  (for [entry entries]
+    (add-source-tag
+     (query-list it from table-rows where (get it "pointer") is entry.videoid)
+     source-name table)))
 
 (defn add-entries-to-table [entries source-name table]
   "Add entries to table in batch"
