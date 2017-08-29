@@ -8,20 +8,6 @@
 (import [mpm.utils [*]])
 (require [mpm.macros [color-print]])
 
-(setv *config-env-var* "MPM_CONFIG_FILE")
-(setv *default-config-file* "~/.mpm.yaml")
-(setv *default-yt-cache* "~/.yt-cache")
-(setv *cache-limit* 100)
-(setv *default-database* "~/.mpm.db")
-
-
-(defn get-config [config-file]
-  "Return config after reading it from given file. Create a file if none exits."
-
-  (with [cf (open (g-file config-file
-                          (yaml.dump {:youtube-cache *default-yt-cache*
-                                      :database *default-database*})))]
-        (yaml.load cf)))
 
 (defn source-add [source database]
   "Add source to the database"
@@ -47,15 +33,11 @@
 (defclass Mpm []
   "Class for working with source"
 
-  (defn --init-- [self]
-    (setv config-file (if (in *config-env-var* os.environ)
-                        (get os.environ *config-env-var*)
-                        *default-config-file*))
-    (setv self.config (get-config config-file))
-
-    (setv database-file (g-file (get self.config :database)))
-    (setv self.database (dataset.connect (+ "sqlite:///" database-file)))
-    (setv yt-cache (YtCache (g-dir (get self.config :youtube-cache)) *cache-limit*)))
+  (defn --init-- [self config database-path]
+    (setv self.config config)
+    (setv self.database (dataset.connect (+ "sqlite:///" (ensure-file database-path))))
+    (setv yt-cache (YtCache (ensure-dir (get self.config :youtube-cache))
+                            (get self.config :cache-limit))))
 
   (defn add-source [self resolver-name source-name url &optional [inc False]]
     "Add a source to database if resolver is present"
