@@ -32,28 +32,29 @@
 (defn youtube [source database]
   "Resolve youtube links. Asks for a SOURCE and list of AVAILABLE items.
 Return a list of items resolved"
-  (let [source-name (get source "name")
+  (setv source-name (get source "name")
         url (get source "url")
         inc (get source "inc")
         table (get database "songs")
-        all-songs (list (map identity (table.all)))]
-    (color-print :bold (+ "Resolving source " source-name))
-    (if (in "watch" url)
-      ;; This is a single video (ignoring playlist in the link)
-      ;; Should remove this, a better solution is a file list based resolver
-      (raise (NotImplementedError))
-      ;; This is a playlist
-      (let [plist (pafy.get_playlist2 url :basic True)
-            piter (iter plist)
-            entries []]
-        (for [_ (tqdm (range (len plist)))]
-          (try
-           (do (setv pitem (next piter))
-               (if (and inc (processed? pitem source-name all-songs)
-                        (do (color-print :warn "Reached end of incremental source")
-                            (break))))
-               (.append entries pitem))
-           (except [Exception] (print "sdsd"))))
-        (let [[to-tag to-add] (separate (fn [x] (present? x all-songs)) entries)]
-          (add-tags-to-table to-tag source-name table all-songs)
-          (add-entries-to-table to-add source-name table))))))
+        all-songs (list (map identity (table.all))))
+  (color-print :bold (+ "Resolving source " source-name))
+  (if (in "watch" url)
+    ;; This is a single video (ignoring playlist in the link)
+    ;; Should remove this, a better solution is a file list based resolver
+    (raise (NotImplementedError))
+    ;; This is a playlist
+    (do
+     (setv plist (pafy.get_playlist2 url :basic True)
+           piter (iter plist)
+           entries [])
+     (for [_ (tqdm (range (len plist)))]
+       (try
+        (do (setv pitem (next piter))
+            (if (and inc (processed? pitem source-name all-songs)
+                     (do (color-print :warn "Reached end of incremental source")
+                         (break))))
+            (.append entries pitem))
+        (except [Exception] (print "sdsd"))))
+     (setv [to-tag to-add] (separate (fn [x] (present? x all-songs)) entries))
+     (add-tags-to-table to-tag source-name table all-songs)
+     (add-entries-to-table to-add source-name table))))

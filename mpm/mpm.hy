@@ -25,36 +25,36 @@
 
 (defn source-add [source database]
   "Add source to the database"
-  (let [table (get database "sources")
-        name (get source "name")]
-    (if (none? (table.find_one :name name))
-      (do (table.insert source)
-          (color-print :info "Source added. Run `mpm source up` to update."))
-      (color-print :warn "Source "
-                   :bold name
-                   :warn " already present in database. Skipping."))))
+  (setv table (get database "sources")
+        name (get source "name"))
+  (if (none? (table.find_one :name name))
+    (do (table.insert source)
+        (color-print :info "Source added. Run `mpm source up` to update."))
+    (color-print :warn "Source "
+                 :bold name
+                 :warn " already present in database. Skipping.")))
 
 (defn source-remove [source-name database]
   "Remove source identifier from the database"
-  (let [table (get database "sources")]
-    (table.delete :name source-name)))
+  (setv table (get database "sources"))
+  (table.delete :name source-name))
 
 (defn source-list [database]
   "Return list of sources in the database"
-  (let [table (get database "sources")]
-    (table.all)))
+  (setv table (get database "sources"))
+  (table.all))
 
 (defclass Mpm []
   "Class for working with source"
 
   (defn --init-- [self]
-    (let [config-file (if (in *config-env-var* os.environ)
+    (setv config-file (if (in *config-env-var* os.environ)
                         (get os.environ *config-env-var*)
-                        *default-config-file*)]
-      (setv self.config (get-config config-file)))
+                        *default-config-file*))
+    (setv self.config (get-config config-file))
 
-    (let [database-file (g-file (get self.config :database))]
-      (setv self.database (dataset.connect (+ "sqlite:///" database-file))))
+    (setv database-file (g-file (get self.config :database)))
+    (setv self.database (dataset.connect (+ "sqlite:///" database-file)))
     (setv yt-cache (YtCache (g-dir (get self.config :youtube-cache)) *cache-limit*)))
 
   (defn add-source [self resolver-name source-name url &optional [inc False]]
@@ -86,9 +86,9 @@ provided source."
 
   (defn search [self query]
     "List all songs matching the query"
-    (let [table (get self.database "songs")]
-      (for [song (table.all)]
-        (print song))))
+    (setv table (get self.database "songs"))
+    (for [song (table.all)]
+      (print song)))
 
   (defn play [self query]
     "Play all songs matching the query"))

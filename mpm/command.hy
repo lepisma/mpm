@@ -21,8 +21,8 @@ Options:
 (require [mpm.macros [check-args]])
 
 (defn cli []
-  (let [args (docopt *doc* :version "mpm v0.1.0")
-        m (Mpm)]
+  (setv args (docopt *doc* :version "mpm v0.1.0")
+        m (Mpm))
     (cond [(check-args args (and "source" "add"))
            (m.add-source (get args "<resolver>")
                          (get args "<name>")
@@ -37,4 +37,4 @@ Options:
           [(check-args args (or "ls" "list"))
            (m.search (get args "<query>"))]
           [(check-args args ("play")) True
-           (m.play (get args "<query>"))])))
+           (m.play (get args "<query>"))]))

@@ -14,12 +14,13 @@ setup(
     author_email="abhinav.tushar.vs@gmail.com",
     url=project_url,
     install_requires=[
+        "dataset",
         "docopt",
         "tqdm",
         "colorama",
         "pyyaml",
         "pafy",
-        "hy==0.12.1"
+        "hy==0.13.0"
     ],
     keywords="",
     packages=find_packages(),
