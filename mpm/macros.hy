@@ -3,6 +3,17 @@
 
 (colorama.init :autoreset True)
 
+(defmacro let [definitions &rest body]
+  (setv n (len definitions)
+        i 0)
+  (setv out-exp '())
+  (while (< i n)
+    (.append out-exp
+             `(setv ~(nth definitions i) ~(nth definitions (+ i 1))))
+    (setv i (+ i 2)))
+  (.append out-exp `(do ~@body))
+  `(do ~@out-exp))
+
 (defmacro! this-or-that [o!x y]
   `(lif ~g!x ~g!x ~y))
 
