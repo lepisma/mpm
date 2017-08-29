@@ -18,7 +18,7 @@ Options:
 
 (import [docopt [docopt]])
 (import [mpm.mpm [Mpm]])
-(import [mpm.utils [*]])
+(import [mpm.fs [*]])
 (import yaml)
 (require [mpm.macros [check-args]])
 

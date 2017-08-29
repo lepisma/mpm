@@ -3,6 +3,7 @@
 (import dataset)
 (import [mpm.resolvers.common [resolve]])
 (import [mpm.cache [YtCache]])
+(import [mpm.fs [*]])
 (require [mpm.macros [color-print]])
 
 
@@ -27,13 +28,17 @@
   (setv table (get database "sources"))
   (table.all))
 
+(defn get-dataset [database-path]
+  "Return dataset connection"
+  (dataset.connect (+ "sqlite:///" (get-full-path database-path))))
+
 (defclass Mpm []
   "Class for working with source"
 
   (defn --init-- [self config]
     (setv self.config config)
-    (setv self.database (dataset.connect (+ "sqlite:///" (get self.config "database"))))
-    (setv yt-cache-cfg (get self.config "yt-cache"))
+    (setv self.database (get-dataset (get self.config "database")))
+    (setv yt-cache-cfg (get self.config "yt_cache"))
     (setv self.yt-cache (YtCache (get yt-cache-cfg "path")
                                  (get yt-cache-cfg "limit"))))
 
