@@ -21,21 +21,18 @@ Options:
 (import sys)
 (require [mpm.macros [check-args]])
 
-(def *default-yt-cache* "~/.mpm.d/yt-cache"
-  *default-database* "~/.mpm.d/database")
+(def *default-config* (dict :yt-cache (dict :limit 100
+                                            :path "~/.mpm.d/yt-cache")
+                            :database "~/.mpm.d/database"))
 
 (defn get-config [config-file]
   "Return config after reading it from given file. Create a file if none exits."
-  (with [cf (open (ensure-file config-file
-                               (yaml.dump (dict :youtube-cache *default-yt-cache*
-                                                :database *default-database*))))]
+  (with [cf (open (ensure-file config-file (yaml.dump *default-config*)))]
         (yaml.load cf)))
 
 (defn cli []
   (setv args (docopt *doc* :version "mpm v0.1.0"))
-
-  (setv m (Mpm ))
-        ;;m (Mpm)
+  (setv m (Mpm (get-config (get args "--config"))))
   (cond [(check-args args (and "source" "add"))
          (m.add-source (get args "<resolver>")
                        (get args "<name>")
@@ -48,6 +45,4 @@ Options:
         [(check-args args (and "source" (or "up" "update")))
          (m.update-source :source-name (get args "<name>"))]
         [(check-args args (or "ls" "list"))
-         (m.search (get args "<query>"))]
-        [(check-args args ("play")) True
-         (m.play (get args "<query>"))]))
+         (m.search (get args "<query>"))]))
