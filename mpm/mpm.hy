@@ -33,11 +33,12 @@
 (defclass Mpm []
   "Class for working with source"
 
-  (defn --init-- [self config database-path]
+  (defn --init-- [self config]
     (setv self.config config)
-    (setv self.database (dataset.connect (+ "sqlite:///" (ensure-file database-path))))
-    (setv yt-cache (YtCache (ensure-dir (get self.config :youtube-cache))
-                            (get self.config :cache-limit))))
+    (setv self.database (dataset.connect (+ "sqlite:///" (get self.config "database"))))
+    (setv yt-cache-cfg (get self.config "yt-cache"))
+    (setv self.yt-cache (YtCache (get yt-cache-cfg "path")
+                                 (get yt-cache-cfg "limit"))))
 
   (defn add-source [self resolver-name source-name url &optional [inc False]]
     "Add a source to database if resolver is present"
