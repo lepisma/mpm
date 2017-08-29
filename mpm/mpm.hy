@@ -67,13 +67,4 @@
     "Update information from sources. Optionally do this only for the
 provided source."
     (for [source (source-list self.database)]
-      (resolve source self.database)))
-
-  (defn search [self query]
-    "List all songs matching the query"
-    (setv table (get self.database "songs"))
-    (for [song (table.all)]
-      (print song)))
-
-  (defn play [self query]
-    "Play all songs matching the query"))
+      (resolve source self.database))))
