@@ -1,11 +1,8 @@
 ;; Main module for mpm
 
-(import os)
-(import yaml)
 (import dataset)
 (import [mpm.resolvers.common [resolve]])
 (import [mpm.cache [YtCache]])
-(import [mpm.utils [*]])
 (require [mpm.macros [color-print]])
 
 

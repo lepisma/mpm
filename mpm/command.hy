@@ -18,7 +18,8 @@ Options:
 
 (import [docopt [docopt]])
 (import [mpm.mpm [Mpm]])
-(import sys)
+(import [mpm.utils [*]])
+(import yaml)
 (require [mpm.macros [check-args]])
 
 (def *default-config* (dict :yt-cache (dict :limit 100
