@@ -6,8 +6,6 @@
 (require [mpm.macros [*]])
 
 (defclass Mpm []
-  "Class for working with source"
-
   (defn --init-- [self config]
     (setv self.config config)
     (setv self.database (db.get-dataset-conn (get self.config "database"))))
