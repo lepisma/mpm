@@ -1,10 +1,11 @@
 (setv *doc* "Music package manager (mpm)
 
 Usage:
-  mpm add <resolver> <name> <url> [--inc] [--config=<CFG>]
-  mpm (rm | remove) <name> [--config=<CFG>]
-  mpm (ls | list) [--config=<CFG>]
-  mpm (up | update) [<name>] [--config=<CFG>]
+  mpm source add <resolver> <name> <url> [--inc] [--config=<CFG>]
+  mpm source (rm | remove) <name> [--config=<CFG>]
+  mpm source (ls | list) [--config=<CFG>]
+  mpm source (up | update) [<name>] [--config=<CFG>]
+  mpm add [--title=<TITLE>] [--url=<URL>] [--artist=<ARTIST>] [--album=<ALBUM>]
 
   mpm -h | --help
   mpm -v | --version
@@ -31,14 +32,19 @@ Options:
 (defn cli []
   (setv args (docopt *doc* :version "mpm v0.1.0"))
   (setv m (Mpm (get-config (get args "--config"))))
-  (cond [(check-args args (and "add"))
+  (cond [(check-args args (and "source" "add"))
          (m.add-source (get args "<resolver>")
                        (get args "<name>")
                        (get args "<url>")
                        :inc (get args "--inc"))]
-        [(check-args args (or "rm" "remove"))
+        [(check-args args (and "source" (or "rm" "remove")))
          (m.remove-source (get args "<name>"))]
-        [(check-args args (or "ls" "list"))
+        [(check-args args (and "source" (or "ls" "list")))
          (m.list-source)]
-        [(check-args args (or "up" "update"))
-         (m.update-source :source-name (get args "<name>"))]))
+        [(check-args args (and "source" (or "up" "update")))
+         (m.update-source :source-name (get args "<name>"))]
+        [(check-args args (and "add"))
+         (m.add-single :title (get args "--title")
+                       :url (get args "--url")
+                       :artist (get args "--artist")
+                       :album (get args "--album"))]))
