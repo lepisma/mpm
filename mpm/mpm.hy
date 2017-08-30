@@ -54,15 +54,16 @@ provided source."
   (defn add-song [self &optional title url artist album]
     "Add a single song directly to database"
 
-    (cond [(and url (not title))
+    (cond [url
            ;; This is a youtube import
-           (let [url (yt.create-url url)]
+           (let [url (yt.create-url url)
+                 title (or title "NA")]
              (if (db.song-url-present? url self.database)
                (do
                 (color-print :warn (+ url " already present."))
                 (exit 1))
                (do
-                (db.add-song self.database "NA" url "NA" "NA")
+                (db.add-song self.database title url artist album)
                 (color-print :info (+ url " added.")))))]
           [(and title (not url))
            ;; This is a player import
@@ -73,16 +74,6 @@ provided source."
              (do
               (db.add-song self.database title "NA" artist album)
               (color-print :info (+ title " - " artist " added."))))]
-          [(and title url)
-           ;; This is a complete import
-           (let [url (yt.create-url url)]
-             (if (db.song-url-present? url self.database)
-               (do
-                (color-print :warn (+ url " already present."))
-                (exit 1))
-               (do
-                (db.add-song self.database title url artist album)
-                (color-print :info (+ url " added.")))))]
           [True
            ;; Fail
            (do
