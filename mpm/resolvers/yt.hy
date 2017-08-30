@@ -1,6 +1,8 @@
+;; Youtube playlist resolver
+
 (import pafy)
 (import [tqdm [tqdm]])
-(require [mpm.macros [color-print query-list separate]])
+(require [mpm.macros [*]])
 
 (defn add-source-tag [item source-name table]
   "Add source name for the item in the table."
@@ -29,7 +31,7 @@
   (query-list (in source-name (get it "sources")) from table-rows
                where (get it "pointer") is item.videoid))
 
-(defn youtube [source database]
+(defn resolve-yt-playlist [source database]
   "Resolve youtube links. Asks for a SOURCE and list of AVAILABLE items.
 Return a list of items resolved"
   (setv source-name (get source "name")

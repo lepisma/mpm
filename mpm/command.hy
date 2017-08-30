@@ -20,7 +20,7 @@ Options:
 (import [mpm.mpm [Mpm]])
 (import [mpm.fs [*]])
 (import yaml)
-(require [mpm.macros [check-args]])
+(require [mpm.macros [*]])
 
 (def *default-config* (dict :database "~/.mpm.d/database"))
 
@@ -40,7 +40,7 @@ Options:
         [(check-args args (and "source" (or "rm" "remove")))
          (m.remove-source (get args "<name>"))]
         [(check-args args (and "source" (or "ls" "list")))
-         (m.list-source)]
+         (m.list-sources)]
         [(check-args args (and "source" (or "up" "update")))
          (m.update-source :source-name (get args "<name>"))]
         [(check-args args (and "add"))

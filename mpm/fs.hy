@@ -1,5 +1,6 @@
 (import [os [path]])
 (import os)
+(require [mpm.macros [*]])
 
 (defn get-full-path [partial-path]
   "Return full absolute path"

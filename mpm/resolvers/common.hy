@@ -1,8 +1,9 @@
-(import [mpm.resolvers.youtube [youtube]])
-(require [mpm.macros [this-or-that]])
+(import [mpm.resolvers.yt [resolve-yt-playlist]])
+(import [mpm.resolvers.beets [resolve-beets]])
+(require [mpm.macros [*]])
 
 (defn resolve [source database]
   "Main link resolving function"
-  ((this-or-that (.get (globals) (get source "resolver"))
+  ((this-or-that (.get (globals) (+ "resolve-" (get source "resolver")))
                  (raise NotImplementedError))
    source database))
