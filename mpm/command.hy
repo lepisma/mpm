@@ -18,7 +18,7 @@ Options:
 
 (import [docopt [docopt]])
 (import [mpm.mpm [Mpm]])
-(import [mpm.fs [*]])
+(import [mpm.fs :as fs])
 (import yaml)
 (require [mpm.macros [*]])
 
@@ -26,7 +26,7 @@ Options:
 
 (defn get-config [config-file]
   "Return config after reading it from given file. Create a file if none exits."
-  (with [cf (open (ensure-file config-file (yaml.dump *default-config*)))]
+  (with [cf (open (fs.ensure-file config-file (yaml.dump *default-config*)))]
         (yaml.load cf)))
 
 (defn cli []
