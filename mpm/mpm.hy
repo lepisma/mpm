@@ -1,6 +1,7 @@
 ;; Main module for mpm
 
 (import [mpm.resolvers.common [resolve]])
+(import [mpm.resolvers.yt :as yt])
 (import [mpm.db :as db])
 (import [mpm.fs :as fs])
 (import [sys [exit]])
@@ -55,13 +56,33 @@ provided source."
 
     (cond [(and url (not title))
            ;; This is a youtube import
-           (raise (NotImplementedError))]
+           (let [url (yt.create-url url)]
+             (if (db.song-url-present? url self.database)
+               (do
+                (color-print :warn (+ url " already present."))
+                (exit 1))
+               (do
+                (db.add-song self.database "NA" url "NA" "NA")
+                (color-print :info (+ url " added.")))))]
           [(and title (not url))
            ;; This is a player import
-           (raise (NotImplementedError))]
+           (if (db.song-info-present? title artist self.database)
+             (do
+              (color-print :warn (+ title " - " artist " already present."))
+              (exit 1))
+             (do
+              (db.add-song self.database title "NA" artist album)
+              (color-print :info (+ title " - " artist " added."))))]
           [(and title url)
            ;; This is a complete import
-           (raise (NotImplementedError))]
+           (let [url (yt.create-url url)]
+             (if (db.song-url-present? url self.database)
+               (do
+                (color-print :warn (+ url " already present."))
+                (exit 1))
+               (do
+                (db.add-song self.database title url artist album)
+                (color-print :info (+ url " added.")))))]
           [True
            ;; Fail
            (do

@@ -41,6 +41,10 @@
                         :album album
                         :mtime mtime))))
 
+(defn song-info-present? [title artist database]
+  "Check if song identified by title and artist is present"
+  (.find_one (get database "songs") :title title :artist artist))
+
 (defn song-url-present? [song-url database]
   "Check if song url is present in database"
   (.find_one (get database "songs") :url song-url))
