@@ -40,7 +40,7 @@
                    :bold (get source "name")
                    :normal (+ " :: " (get source "url")))))
 
-  (defn update-source [self &optional [source-name None]]
+  (defn update-source [self &optional source-name]
     "Update information from sources. Optionally do this only for the
 provided source."
     (if source-name
