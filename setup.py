@@ -26,7 +26,7 @@ setup(
     packages=find_packages(),
     entry_points={
         "console_scripts": [
-            "mpm=mpm.command:cli"
+            "mpm=mpm.cli:cli"
         ]
     },
     classifiers=(

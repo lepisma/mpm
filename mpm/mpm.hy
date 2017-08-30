@@ -1,7 +1,7 @@
 ;; Main module for mpm
 
 (import [mpm.resolvers.common [resolve]])
-(import [mpm.database :as db])
+(import [mpm.db :as db])
 (import [mpm.fs :as fs])
 (require [mpm.macros [*]])
 
