@@ -63,4 +63,8 @@
     "Update information from sources. Optionally do this only for the
 provided source."
     (for [source (source-list self.database)]
-      (resolve source self.database))))
+      (resolve source self.database)))
+
+  (defn add-single [self &optional title url artist album]
+    "Add a single song directly to database"
+    (raise (NotImplementedError))))
