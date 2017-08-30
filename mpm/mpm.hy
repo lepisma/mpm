@@ -2,7 +2,6 @@
 
 (import dataset)
 (import [mpm.resolvers.common [resolve]])
-(import [mpm.cache [YtCache]])
 (import [mpm.fs [*]])
 (require [mpm.macros [color-print]])
 
@@ -37,10 +36,7 @@
 
   (defn --init-- [self config]
     (setv self.config config)
-    (setv self.database (get-dataset (get self.config "database")))
-    (setv yt-cache-cfg (get self.config "yt_cache"))
-    (setv self.yt-cache (YtCache (get yt-cache-cfg "path")
-                                 (get yt-cache-cfg "limit"))))
+    (setv self.database (get-dataset (get self.config "database"))))
 
   (defn add-source [self resolver-name source-name url &optional [inc False]]
     "Add a source to database if resolver is present"

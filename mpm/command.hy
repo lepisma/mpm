@@ -21,9 +21,7 @@ Options:
 (import yaml)
 (require [mpm.macros [check-args]])
 
-(def *default-config* (dict :yt-cache (dict :limit 100
-                                            :path "~/.mpm.d/yt-cache")
-                            :database "~/.mpm.d/database"))
+(def *default-config* (dict :database "~/.mpm.d/database"))
 
 (defn get-config [config-file]
   "Return config after reading it from given file. Create a file if none exits."
