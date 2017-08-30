@@ -4,6 +4,6 @@
 
 (defn resolve [source database]
   "Main link resolving function"
-  ((this-or-that (.get (globals) (+ "resolve-" (get source "resolver")))
+  ((this-or-that (.get (globals) (+ "resolve_" (get source "resolver")))
                  (raise NotImplementedError))
    source database))

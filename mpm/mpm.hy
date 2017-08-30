@@ -44,7 +44,7 @@ provided source."
     (if source-name
       (let [source (db.get-source self.database source-name)]
         (resolve source self.database))
-      (for [source (source-list self.database)]
+      (for [source (db.list-sources self.database)]
         (resolve source self.database))))
 
   (defn add-single [self &optional title url artist album]
