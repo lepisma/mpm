@@ -31,7 +31,7 @@
   "Return a source dict for given name"
   (raise (NotImplementedError)))
 
-(defn add-single [database title url artist album
-                  &optional [mtime (int (time.time))]]
+(defn add-song [database title url artist album
+                &optional [mtime (int (time.time))]]
   "Add a single song to database"
   (raise (NotImplementedError)))

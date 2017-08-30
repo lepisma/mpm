@@ -44,7 +44,7 @@ Options:
         [(check-args args (and "source" (or "up" "update")))
          (m.update-source :source-name (get args "<name>"))]
         [(check-args args (and "add"))
-         (m.add-single :title (get args "--title")
-                       :url (get args "--url")
-                       :artist (get args "--artist")
-                       :album (get args "--album"))]))
+         (m.add-song :title (get args "--title")
+                     :url (get args "--url")
+                     :artist (get args "--artist")
+                     :album (get args "--album"))]))

@@ -47,6 +47,6 @@ provided source."
       (for [source (db.list-sources self.database)]
         (resolve source self.database))))
 
-  (defn add-single [self &optional title url artist album]
+  (defn add-song [self &optional title url artist album]
     "Add a single song directly to database"
     (raise (NotImplementedError))))
