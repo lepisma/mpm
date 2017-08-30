@@ -34,4 +34,13 @@
 (defn add-song [database title url artist album
                 &optional [mtime (int (time.time))]]
   "Add a single song to database"
-  (raise (NotImplementedError)))
+  (let [table (get database "songs")]
+    (table.insert (dict :title title
+                        :url url
+                        :artist artist
+                        :album album
+                        :mtime mtime))))
+
+(defn song-url-present? [song-url database]
+  "Check if song url is present in database"
+  (.find_one (get database "songs") :url song-url))
