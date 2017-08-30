@@ -2,9 +2,10 @@
 
 (import dataset)
 (import os)
+(import sys)
 (import [tqdm [tqdm]])
 
-(def beet-db "/run/media/lepisma/Data/Music/beets.db")
+(setv beet-db (nth sys.argv 1))
 (setv db (dataset.connect (+ "sqlite:///" beet-db)))
 (setv table (get db "items"))
 
