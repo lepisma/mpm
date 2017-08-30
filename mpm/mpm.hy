@@ -3,6 +3,7 @@
 (import [mpm.resolvers.common [resolve]])
 (import [mpm.db :as db])
 (import [mpm.fs :as fs])
+(import [sys [exit]])
 (require [mpm.macros [*]])
 
 (defclass Mpm []
@@ -26,7 +27,9 @@
     "Remove a source from database"
     (if (db.remove-source self.database source-name)
       (color-print :info "Source removed.")
-      (color-print :warn "Some error.")))
+      (do
+       (color-print :error "Error in removing source.")
+       (exit 1))))
 
   (defn list-sources [self]
     "Print all sources available"
@@ -49,4 +52,18 @@ provided source."
 
   (defn add-song [self &optional title url artist album]
     "Add a single song directly to database"
-    (raise (NotImplementedError))))
+
+    (cond [(and url (not title))
+           ;; This is a youtube import
+           (raise (NotImplementedError))]
+          [(and title (not url))
+           ;; This is a player import
+           (raise (NotImplementedError))]
+          [(and title url)
+           ;; This is a complete import
+           (raise (NotImplementedError))]
+          [True
+           ;; Fail
+           (do
+            (color-print :error "Invalid information for importing")
+            (exit 1))])))
