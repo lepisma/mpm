@@ -6,12 +6,12 @@
 2. Lack of decent exploratory music search on vanilla internet.
 
 It is planned to consist of following components:
-+ /Resolvers/ which resolve ~sources~ to real files. These can be local files (from
-  beets database) or streaming files, e.g. via youtube. The end product of
-  resolution is an updated database of songs with pointer to appropriate
-  file/url.
++ /Resolvers/ which resolve ~sources~ to playable links. These /mpm/ links can be
+  local files (from beets database ~beets:<song-id>~) or streaming files, e.g. via
+  youtube (~yt:d_xEVzTDN3c~). The end product of resolution is an updated database
+  of saved songs with pointer to appropriate file/url.
 + A set of /plugins/ which add features, create groups, add custom sources (like
   hot 100, recommendations based on my last few listens) etc. in the database by
-  working on the the pointers.
-+ A /search/ system for creating dynamic, rule based lists (initially based on
-  beets-bbq) for playback, possibly allowing other players to use these lists.
+  working on the pointers.
++ A /search/ system for creating dynamic, rule based lists for playback.
++ A tool that plays mpm links.
