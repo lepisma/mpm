@@ -3,6 +3,11 @@
 
 (colorama.init :autoreset True)
 
+(defsharp p [partial-path]
+  `(do
+    (import [os.path :as path])
+    (path.abspath (path.expanduser ~partial-path))))
+
 (defmacro let [definitions &rest body]
   (setv n (len definitions)
         i 0)
