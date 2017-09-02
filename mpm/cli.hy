@@ -30,21 +30,21 @@ Options:
         (yaml.load cf)))
 
 (defn cli []
-  (setv args (docopt *doc* :version "mpm v0.1.0"))
-  (setv m (Mpm (get-config (get args "--config"))))
-  (cond [(check-args args (and "source" "add"))
-         (m.add-source (get args "<resolver>")
-                       (get args "<name>")
-                       (get args "<url>")
-                       :inc (get args "--inc"))]
-        [(check-args args (and "source" (or "rm" "remove")))
-         (m.remove-source (get args "<name>"))]
-        [(check-args args (and "source" (or "ls" "list")))
-         (m.list-sources)]
-        [(check-args args (and "source" (or "up" "update")))
-         (m.update-source :source-name (get args "<name>"))]
-        [(check-args args (and "add"))
-         (m.add-song :title (get args "--title")
-                     :url (get args "--url")
-                     :artist (get args "--artist")
-                     :album (get args "--album"))]))
+  (let [args (docopt *doc* :version "mpm v0.1.0")
+        mpm-instance (Mpm (get-config (get args "--config")))]
+    (cond [(check-args args (and "source" "add"))
+           (mpm-instance.add-source (get args "<resolver>")
+                         (get args "<name>")
+                         (get args "<url>")
+                         :inc (get args "--inc"))]
+          [(check-args args (and "source" (or "rm" "remove")))
+           (mpm-instance.remove-source (get args "<name>"))]
+          [(check-args args (and "source" (or "ls" "list")))
+           (mpm-instance.list-sources)]
+          [(check-args args (and "source" (or "up" "update")))
+           (mpm-instance.update-source :source-name (get args "<name>"))]
+          [(check-args args (and "add"))
+           (mpm-instance.add-song :title (get args "--title")
+                       :url (get args "--url")
+                       :artist (get args "--artist")
+                       :album (get args "--album"))])))
