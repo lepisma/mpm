@@ -2,13 +2,9 @@
 (import os)
 (require [mpm.macros [*]])
 
-(defn get-full-path [partial-path]
-  "Return full absolute path"
-  (path.abspath (path.expanduser partial-path)))
-
 (defn ensure-file [file-path &optional [default-data ""]]
   "Create file if not exists with default-data and return path."
-  (setv full-path (get-full-path file-path))
+  (setv full-path #pfile-path)
   (ensure-dir (path.dirname full-path))
 
   (if (not (path.exists full-path))
@@ -18,7 +14,7 @@
 
 (defn ensure-dir [dir-path]
   "Create directory if not exists and return path."
-  (setv full-path (get-full-path dir-path))
+  (setv full-path #pdir-path)
   (if (not (path.exists full-path))
     (os.makedirs full-path))
   full-path)

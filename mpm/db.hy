@@ -7,7 +7,7 @@
 
 (defn get-dataset-conn [database-path]
   "Return dataset connection"
-  (dataset.connect (+ "sqlite:///" (fs.get-full-path database-path))))
+  (dataset.connect (+ "sqlite:///" #pdatabase-path)))
 
 (defn add-source [database source]
   "Add source to the database"
