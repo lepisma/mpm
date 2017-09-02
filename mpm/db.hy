@@ -31,6 +31,11 @@
   "Return a source dict for given name"
   (raise (NotImplementedError)))
 
+(defn get-song [database song-id]
+  "Return a song dict for given id"
+  (let [table (get database "songs")]
+    (table.find_one :id song-id)))
+
 (defn add-song [database title url artist album
                 &optional [mtime (int (time.time))]]
   "Add a single song to database"
