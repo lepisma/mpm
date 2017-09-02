@@ -16,6 +16,14 @@
     "Return basic stats about the library"
     (print (+ "Total songs: " (str (db.count-rows self.database "songs")))))
 
+  (defn show-song [self song-id]
+    "Display information about song-id"
+    (let [table (get self.database "songs")
+          song (table.find-one :id song-id)]
+      (for [k song]
+        (color-print :info (.format "{0: <8}: " k)
+                     :bold (str (get song k))))))
+
   (defn add-source [self resolver-name source-name url &optional [inc False]]
     "Add a source to database if resolver is present"
     (let [source (dict :resolver resolver-name

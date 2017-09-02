@@ -7,6 +7,7 @@ Usage:
   mpm source (up | update) [<name>] [--config=<CFG>]
   mpm add [--title=<TITLE>] [--url=<URL>] [--artist=<ARTIST>] [--album=<ALBUM>] [--config=<CFG>]
   mpm stats [--config=<CFG>]
+  mpm show <song-id> [--config=<CFG>]
 
   mpm -h | --help
   mpm -v | --version
@@ -50,4 +51,6 @@ Options:
                        :artist (get args "--artist")
                        :album (get args "--album"))]
           [(check-args args (and "stats"))
-           (mpm-instance.show-stats)])))
+           (mpm-instance.show-stats)]
+          [(check-args args (and "show" "<song-id>"))
+           (mpm-instance.show-song (int (get args "<song-id>")))])))
