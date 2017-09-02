@@ -12,6 +12,10 @@
     (setv self.config config)
     (setv self.database (db.get-dataset-conn (get self.config "database"))))
 
+  (defn show-stats [self]
+    "Return basic stats about the library"
+    (print (+ "Total songs: " (str (db.count-rows self.database "songs")))))
+
   (defn add-source [self resolver-name source-name url &optional [inc False]]
     "Add a source to database if resolver is present"
     (let [source (dict :resolver resolver-name

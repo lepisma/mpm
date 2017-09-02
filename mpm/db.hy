@@ -36,6 +36,10 @@
   (let [table (get database "songs")]
     (table.find_one :id song-id)))
 
+(defn count-rows [database table-name]
+  "Return row count for table-name"
+  (len (get database table-name)))
+
 (defn add-song [database title url artist album
                 &optional [mtime (int (time.time))]]
   "Add a single song to database"
