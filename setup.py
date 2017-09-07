@@ -20,7 +20,9 @@ setup(
         "colorama",
         "pyyaml",
         "pafy",
-        "hy==0.13.0"
+        "hy==0.13.0",
+        "requests",
+        "eep"
     ],
     keywords="",
     packages=find_packages(),
