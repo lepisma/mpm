@@ -17,7 +17,8 @@
         res (requests.get "https://youtube.com/results" :params params)
         es (Searcher res.text)]
     (es.search-forward "watch?v=")
-    (+ "https://youtube.com/" (es.get-sub :end (+ 11 es.point)))))
+    (es.jump 11)
+    (+ "https://youtube.com/" (es.get-sub))))
 
 (defn resolve-yt-playlist [source database]
   "Resolve youtube playlist"
