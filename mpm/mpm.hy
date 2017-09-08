@@ -5,6 +5,7 @@
 (import [mpm.db :as db])
 (import [mpm.fs :as fs])
 (import [sys [exit]])
+(import [tqdm [tqdm]])
 (require [mpm.macros [*]])
 
 (defclass Mpm []
@@ -90,4 +91,18 @@ provided source."
            ;; Fail
            (do
             (color-print :error "Invalid information for importing")
-            (exit 1))])))
+            (exit 1))]))
+
+  (defn fix-urls [self]
+    "Fix missing urls by filling in with youtube urls"
+    (let [songs-to-fix (db.get-songs-without-url self.database)]
+      (print (+ (str (len songs-to-fix)) " missing url(s)."))
+      (for [song (tqdm songs-to-fix)]
+        (let [yt-search-term (+ (get song "artist") " " (get song "title"))
+              yt-url (yt.create-url (yt.search-yt yt-search-term))]
+          (setv (get song "url") yt-url)
+          (db.update-song self.database song ["id"])))))
+
+  (defn fix-metadata [self]
+    "Fix missing metadata. This is a mostly interactive step."
+    (raise (NotImplementedError))))

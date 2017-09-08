@@ -8,7 +8,7 @@ Usage:
   mpm add [--title=<TITLE>] [--url=<URL>] [--artist=<ARTIST>] [--album=<ALBUM>] [--config=<CFG>]
   mpm stats [--config=<CFG>]
   mpm show <song-id> [--config=<CFG>]
-  mpm fix (url | metadata) [--config=<CFG>]
+  mpm fix (urls | metadata) [--config=<CFG>]
 
   mpm -h | --help
   mpm -v | --version

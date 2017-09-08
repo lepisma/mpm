@@ -36,6 +36,16 @@
   (let [table (get database "songs")]
     (table.find_one :id song-id)))
 
+(defn get-songs-without-url [database]
+  "Return songs without url"
+  (let [table (get database "songs")]
+    (list (table.find :url "NA"))))
+
+(defn update-song [database song filter-keys]
+  "Update song info"
+  (let [table (get database "songs")]
+    (table.update song filter-keys)))
+
 (defn count-rows [database table-name]
   "Return row count for table-name"
   (len (get database table-name)))
