@@ -1,6 +1,6 @@
 (import [mpm.resolvers.yt [resolve-yt-playlist]])
 (import [mpm.resolvers.beets [resolve-beets]])
-(require [mpm.macros [*]])
+(require [high.macros [*]])
 
 (defn resolve [source database]
   "Main link resolving function"

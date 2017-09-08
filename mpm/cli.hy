@@ -23,7 +23,7 @@ Options:
 (import [mpm.mpm [Mpm]])
 (import [mpm.fs :as fs])
 (import yaml)
-(require [mpm.macros [*]])
+(require [high.macros [*]])
 
 (def *default-config* (dict :database "~/.mpm.d/database"))
 

@@ -1,6 +1,6 @@
 (import [os [path]])
 (import os)
-(require [mpm.macros [*]])
+(require [high.macros [*]])
 
 (defn ensure-file [file-path &optional [default-data ""]]
   "Create file if not exists with default-data and return path."

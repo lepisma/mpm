@@ -6,7 +6,7 @@
 (import [mpm.fs :as fs])
 (import [sys [exit]])
 (import [tqdm [tqdm]])
-(require [mpm.macros [*]])
+(require [high.macros [*]])
 
 (defclass Mpm []
   (defn --init-- [self config]

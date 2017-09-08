@@ -4,7 +4,7 @@
 (import [tqdm [tqdm]])
 (import requests)
 (import [eep [Searcher]])
-(require [mpm.macros [*]])
+(require [high.macros [*]])
 
 (defn create-url [dirty-yt-url]
   "Create a clean 11 digit id based url for keeping in db"

@@ -3,7 +3,7 @@
 (import time)
 (import dataset)
 (import [mpm.fs :as fs])
-(require [mpm.macros [*]])
+(require [high.macros [*]])
 
 (defn get-dataset-conn [database-path]
   "Return dataset connection"

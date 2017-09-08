@@ -2,7 +2,7 @@
 
 (import [mpm.db :as db])
 (import [tqdm [tqdm]])
-(require [mpm.macros [*]])
+(require [high.macros [*]])
 
 (defn resolve-beets [source database]
   "Resolve from beets database. Asks for a SOURCE and handle to DATABASE."
