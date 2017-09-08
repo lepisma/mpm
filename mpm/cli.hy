@@ -8,6 +8,7 @@ Usage:
   mpm add [--title=<TITLE>] [--url=<URL>] [--artist=<ARTIST>] [--album=<ALBUM>] [--config=<CFG>]
   mpm stats [--config=<CFG>]
   mpm show <song-id> [--config=<CFG>]
+  mpm fix (url | metadata) [--config=<CFG>]
 
   mpm -h | --help
   mpm -v | --version
@@ -53,4 +54,8 @@ Options:
           [(check-args args (and "stats"))
            (mpm-instance.show-stats)]
           [(check-args args (and "show" "<song-id>"))
-           (mpm-instance.show-song (int (get args "<song-id>")))])))
+           (mpm-instance.show-song (int (get args "<song-id>")))]
+          [(check-args args (and "fix" "urls"))
+           (mpm-instance.fix-urls)]
+          [(check-args args (and "fix" "metadata"))
+           (mpm-instance.fix-metadata)])))
