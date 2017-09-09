@@ -17,12 +17,12 @@ setup(
         "dataset",
         "docopt",
         "tqdm",
-        "colorama",
         "pyyaml",
         "pafy",
         "hy==0.13.0",
         "requests",
-        "eep"
+        "eep",
+        "high"
     ],
     keywords="",
     packages=find_packages(),
