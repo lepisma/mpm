@@ -13,5 +13,5 @@ It is planned to consist of following components:
 + A set of /plugins/ which add features, create groups, add custom sources (like
   hot 100, recommendations based on my last few listens) etc. in the database by
   working on the pointers.
-+ A /search/ system for creating dynamic, rule based lists for playback.
-+ A tool that plays mpm links.
++ [[https://github.com/lepisma/bbq][bbq]] for creating dynamic, rule based lists for playback.
++ [[https://github.com/lepisma/mpm-play][mpm-play]] for playing mpm links.

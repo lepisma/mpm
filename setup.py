@@ -21,8 +21,7 @@ setup(
         "pafy",
         "hy==0.13.0",
         "requests",
-        "eep",
-        "high"
+        "eep"
     ],
     keywords="",
     packages=find_packages(),
