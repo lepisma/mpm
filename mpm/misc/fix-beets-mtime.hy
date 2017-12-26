@@ -1,4 +1,4 @@
-;; Indie script for correcting mtime in beets
+;; Script for correcting mtime in beets
 
 (import dataset)
 (import os)
