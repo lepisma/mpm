@@ -1,17 +1,18 @@
 #+TITLE: mpm
 
-~mpm~ is a package manager for music. It tries to solve two problems:
+~mpm~ is a package manager for music. It is planned to consist of following
+components:
 
-1. Limitations of keeping local music files.
-2. Lack of decent exploratory music search on vanilla internet.
-
-It is planned to consist of following components:
 + /Resolvers/ which resolve ~sources~ to playable links. These /mpm/ links can be
   local files (from beets database ~beets:<song-id>~) or streaming files, e.g. via
   youtube (~yt:d_xEVzTDN3c~). The end product of resolution is an updated database
   of saved songs with pointer to appropriate file/url.
-+ A set of /plugins/ which add features, create groups, add custom sources (like
-  hot 100, recommendations based on my last few listens) etc. in the database by
-  working on the pointers.
-+ [[https://github.com/lepisma/bbq][bbq]] for creating dynamic, rule based lists for playback.
 + [[https://github.com/lepisma/mpm-play][mpm-play]] for playing mpm links.
++ [[https://github.com/lepisma/bbq][bbq]] for building playlists.
+
+There are two places for feature addition:
+
++ Sources for saving songs from. The new source will need code addition in ~mpm~
+  (for resolution) and ~mpm-play~ (for playing the new source type)
++ Query improvements. These and all the frills needed for things like
+  recommendations etc. will go in ~bbq~.

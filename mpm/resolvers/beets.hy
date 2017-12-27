@@ -9,12 +9,12 @@
 
   (let [beets-db (db.get-dataset-conn (get source "url"))
         beets-table (get beets-db "items")]
-    (for [item (tqdm (beets-db.query "SELECT title, artist, album, id, mtime FROM items"))]
-      (let [song-url (+ "beets:" (str (get item "id")))]
-        (unless (db.song-url-present? song-url database)
-          (db.add-song database
-                       (get item "title")
-                       song-url
-                       (get item "artist")
-                       (get item "album")
-                       :mtime (get item "mtime")))))))
+       (for [item (tqdm (beets-db.query "SELECT title, artist, album, id, mtime FROM items"))]
+         (let [song-url (+ "beets:" (str (get item "id")))]
+              (unless (db.song-url-present? song-url database)
+                (db.add-song database
+                             (get item "title")
+                             song-url
+                             (get item "artist")
+                             (get item "album")
+                             :mtime (get item "mtime")))))))

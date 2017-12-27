@@ -7,25 +7,26 @@
 
 (defn get-dataset-conn [database-path]
   "Return dataset connection"
-  (dataset.connect (+ "sqlite:///" #pdatabase-path)))
+  (dataset.connect (+ "sqlite:///" #pdatabase-path)
+                   :engine-kwargs {"connect_args" {"check_same_thread" False}}))
 
 (defn add-source [database source]
   "Add source to the database"
   (setv table (get database "sources")
         name (get source "name"))
   (if (none? (table.find_one :name name))
-    (do (table.insert source) True)
-    False))
+      (do (table.insert source) True)
+      False))
 
 (defn remove-source [database source-name]
   "Remove given source from the database"
   (let [table (get database "sources")]
-    (table.delete :name source-name)))
+       (table.delete :name source-name)))
 
 (defn list-sources [database]
   "Return a list of all sources in database"
   (let [table (get database "sources")]
-    (table.all)))
+       (table.all)))
 
 (defn get-source [database source-name]
   "Return a source dict for given name"
@@ -34,17 +35,17 @@
 (defn get-song [database song-id]
   "Return a song dict for given id"
   (let [table (get database "songs")]
-    (table.find_one :id song-id)))
+       (table.find_one :id song-id)))
 
 (defn get-songs-without-url [database]
   "Return songs without url"
   (let [table (get database "songs")]
-    (list (table.find :url "NA"))))
+       (list (table.find :url "NA"))))
 
 (defn update-song [database song filter-keys]
   "Update song info"
   (let [table (get database "songs")]
-    (table.update song filter-keys)))
+       (table.update song filter-keys)))
 
 (defn count-rows [database table-name]
   "Return row count for table-name"
@@ -54,11 +55,11 @@
                 &optional [mtime (int (time.time))]]
   "Add a single song to database"
   (let [table (get database "songs")]
-    (table.insert (dict :title title
-                        :url url
-                        :artist artist
-                        :album album
-                        :mtime mtime))))
+       (table.insert (dict :title title
+                           :url url
+                           :artist artist
+                           :album album
+                           :mtime mtime))))
 
 (defn song-info-present? [title artist database]
   "Check if song identified by title and artist is present"
