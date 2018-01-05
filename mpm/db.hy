@@ -10,11 +10,16 @@
   (dataset.connect (+ "sqlite:///" #pdatabase-path)
                    :engine-kwargs {"connect_args" {"check_same_thread" False}}))
 
+(defn source-present? [database source-name]
+  "Check if source is present in the database"
+  (let [table (get database "sources")]
+       (not (none? (table.find-one :name source-name)))))
+
 (defn add-source [database source]
   "Add source to the database"
   (setv table (get database "sources")
-        name (get source "name"))
-  (if (none? (table.find_one :name name))
+        source-name (get source "name"))
+  (if (not (source-present? database source-name))
       (do (table.insert source) True)
       False))
 
@@ -30,7 +35,10 @@
 
 (defn get-source [database source-name]
   "Return a source dict for given name"
-  (raise (NotImplementedError)))
+  (let [table (get database "sources")]
+       (if (not (source-present? database source-name))
+           (raise (Exception "Source not found"))
+           (table.find-one :name source-name))))
 
 (defn get-song [database song-id]
   "Return a song dict for given id"
