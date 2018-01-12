@@ -3,7 +3,6 @@
 (import [mpm.resolvers.common [resolve]])
 (import [mpm.resolvers.yt :as yt])
 (import [mpm.db :as db])
-(import [mpm.fs :as fs])
 (import [sys [exit]])
 (import [tqdm [tqdm]])
 (require [high.macros [*]])

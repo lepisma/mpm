@@ -2,7 +2,6 @@
 
 (import time)
 (import dataset)
-(import [mpm.fs :as fs])
 (require [high.macros [*]])
 
 (defn get-dataset-conn [database-path]
