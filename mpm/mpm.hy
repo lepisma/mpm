@@ -71,16 +71,14 @@ provided source."
            ;; This is a youtube import
            (let [url (yt.create-url url)
                  title (or title "NA")]
-                (if (db.song-url-present? url self.database)
-                    (do
-                      (color-print :warn (+ url " already present."))
-                      (exit 1))
-                    (do
-                      (db.add-song self.database title url artist album)
-                      (color-print :info (+ url " added.")))))]
+                (if (db.song-present? self.database :url url)
+                    (do (color-print :warn (+ url " already present."))
+                        (exit 1))
+                    (do db.add-song self.database title url artist album
+                        (color-print :info (+ url " added.")))))]
           [(and title (not url))
            ;; This is a player import
-           (if (db.song-info-present? title artist self.database)
+           (if (db.song-present? self.database :title title :artist artist)
                (do
                  (color-print :warn (+ title " - " artist " already present."))
                  (exit 1))

@@ -69,10 +69,7 @@
                            :album album
                            :mtime mtime))))
 
-(defn song-info-present? [title artist database]
-  "Check if song identified by title and artist is present"
-  (.find_one (get database "songs") :title title :artist artist))
-
-(defn song-url-present? [song-url database]
-  "Check if song url is present in database"
-  (.find_one (get database "songs") :url song-url))
+(defn song-present? [database &kwargs kwargs]
+  "Check if song identified by provided keywords is present in the db"
+  (let [table (get database "songs")]
+       (not (none? (apply table.find-one [] kwargs)))))
