@@ -73,7 +73,7 @@ provided source."
                 (if (db.song-present? self.database :url url)
                     (do (color-print :warn (+ url " already present."))
                         (exit 1))
-                    (do db.add-song self.database title url artist album
+                    (do (db.add-song self.database title url artist album)
                         (color-print :info (+ url " added.")))))]
           [(and title (not url))
            ;; This is a player import
