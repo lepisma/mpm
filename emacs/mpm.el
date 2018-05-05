@@ -64,8 +64,7 @@ TODO: Save artists for better heuristic."
                 "--url" ,url)))
     `(start-process "*mpm*" (get-buffer-create "*mpm*") "mpm" "add"
                     ,@(if album
-                          (append (list "--album" (shell-quote-argument album))
-                                  args)
+                          (append (list "--album" album) args)
                         args))))
 
 (defun mpm-confirm-metadata (url artist-title-pair)
