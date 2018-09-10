@@ -21,6 +21,7 @@ Options:
 
 (import [docopt [docopt]])
 (import [mpm.mpm [Mpm]])
+(import [mpm [--version--]])
 (import [high.utils [*]])
 (import yaml)
 (require [high.macros [*]])
@@ -33,7 +34,7 @@ Options:
     (yaml.load cf)))
 
 (defn cli []
-  (let [args (docopt *doc* :version "mpm v0.1.0")
+  (let [args (docopt *doc* :version --version--)
         mpm-instance (Mpm (get-config (get args "--config")))]
        (cond [(check-args args (and "source" "add"))
               (mpm-instance.add-source (get args "<resolver>")
