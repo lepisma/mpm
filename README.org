@@ -1,5 +1,7 @@
 #+TITLE: mpm
 
+/I am moving stuff from here to [[https://github.com/lepisma/bbq][bbq]]. This repo is archived./
+
 ~mpm~ is a package manager for music. It is planned to consist of following
 components:
 
